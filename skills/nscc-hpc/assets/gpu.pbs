@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -N nscc_gpu
+#PBS -P REPLACE_PROJECT_ID
+#PBS -q normal
+#PBS -l select=1:ngpus=1:mpiprocs=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+# Verify the site's current GPU CPU/memory resource hook.
+set -e
+cd "${PBS_O_WORKDIR:?PBS submission directory missing}"
+# Add verified GPU module/environment setup here.
+# Preserve PBS-provided CUDA_VISIBLE_DEVICES.
+exec ./REPLACE_EXECUTABLE

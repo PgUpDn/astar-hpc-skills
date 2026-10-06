@@ -1,0 +1,4 @@
+interface:
+  display_name: "ACRC Orion HPC"
+  short_description: "Prepare and manage ACRC Slurm research workloads"
+  default_prompt: "Use $acrc-hpc to inspect my cluster environment and prepare a job for my workload."

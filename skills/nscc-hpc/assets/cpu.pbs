@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -N nscc_cpu
+#PBS -P REPLACE_PROJECT_ID
+#PBS -q normal
+#PBS -l select=1:ncpus=1:mem=4gb:mpiprocs=1:ompthreads=1
+#PBS -l walltime=00:30:00
+#PBS -j oe
+
+# Replace project, resources, environment setup and executable before submission.
+set -e
+cd "${PBS_O_WORKDIR:?PBS submission directory missing}"
+export OMP_NUM_THREADS=1
+# Add verified module/environment setup here.
+exec ./REPLACE_EXECUTABLE

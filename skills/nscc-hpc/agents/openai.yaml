@@ -1,0 +1,4 @@
+interface:
+  display_name: "NSCC ASPIRE2A HPC"
+  short_description: "Prepare and manage NSCC PBS research workloads"
+  default_prompt: "Use $nscc-hpc to inspect my cluster environment and prepare a job for my workload."

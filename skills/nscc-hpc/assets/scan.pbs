@@ -1,0 +1,53 @@
+#!/bin/bash
+# Lightweight allocation for a potentially large metadata scan.
+# Replace the project, directory and resource values before submission.
+#PBS -N research-scan
+#PBS -P REPLACE_PROJECT_ID
+#PBS -q normal
+#PBS -l select=1:ncpus=1:mem=4gb
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+set -euo pipefail
+cd "${PBS_O_WORKDIR:?Missing submission directory}"
+TARGET="REPLACE_ABSOLUTE_DIRECTORY"
+[[ "$TARGET" = /* && -d "$TARGET" ]] || { echo 'Set an existing absolute TARGET' >&2; exit 2; }
+# Requires a verified Python 3 environment; add module setup as needed.
+# JSON handles spaces/newlines in filenames; symlinks are not followed.
+python3 - "$TARGET" "inventory-${PBS_JOBID:?}.json" <<'PYTHON'
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+
+root = Path(sys.argv[1]).resolve()
+out = Path(sys.argv[2]).resolve()
+if out == root or root in out.parents:
+    raise SystemExit('Write the inventory outside the scanned tree')
+rows = []
+def fail(error):
+    raise error
+for entry in sorted(root.iterdir()):
+    count = size = links = 0
+    if entry.is_symlink():
+        links = 1
+    elif entry.is_file():
+        count, size = 1, entry.stat().st_size
+    elif entry.is_dir():
+        for folder, dirs, files in os.walk(entry, followlinks=False, onerror=fail):
+            for name in dirs + files:
+                path = Path(folder) / name
+                st = path.lstat()
+                if stat.S_ISLNK(st.st_mode):
+                    links += 1
+                elif stat.S_ISREG(st.st_mode):
+                    count += 1
+                    size += st.st_size
+    rows.append(dict(entry=entry.name, files=count, bytes=size, symlinks=links))
+# O_EXCL prevents silently replacing an earlier inventory.
+with out.open('x') as handle:
+    json.dump(rows, handle, indent=2, ensure_ascii=True)
+    handle.write('\n')
+print('Inventory complete; no content hashes were computed.')
+PYTHON

@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N nscc_array
+#PBS -P REPLACE_PROJECT_ID
+#PBS -q normal
+#PBS -l select=1:ncpus=1:mem=4gb:mpiprocs=1:ompthreads=1
+#PBS -l walltime=00:30:00
+#PBS -J 1-10%2
+#PBS -j oe
+
+# Resource requests apply to EACH subjob. Set indices and concurrency first.
+set -e
+cd "${PBS_O_WORKDIR:?PBS submission directory missing}"
+export OMP_NUM_THREADS=1
+: "${PBS_ARRAY_INDEX:?PBS array index missing}"
+# Add verified module/environment setup here.
+mkdir -p "results/${PBS_JOBID}_${PBS_ARRAY_INDEX}"
+# Replace command and adapt input/output arguments to the application.
+exec ./REPLACE_EXECUTABLE "inputs/${PBS_ARRAY_INDEX}.dat" "results/${PBS_JOBID}_${PBS_ARRAY_INDEX}"
