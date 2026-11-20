@@ -19,4 +19,6 @@ Prioritize current applicable site policies and server settings, then newer guid
 
 Limited live checks on 2026-09-19 confirmed a successful user shell, enabled normal/ai routing queues in qstat -Q alongside execution queues, and the presence of myquota, myprojects, and myusage. These checks **did not establish any new researcher's ai access, current balance, every resource ratio, or software version**.
 
+Operational observations added later are dated where they appear: queue limits, routing and charging on 2026-10-10 ([capacity.md](capacity.md)); engineering workflows in October-November 2026 ([engineering.md](engineering.md)). They are observations from one account, not entitlements.
+
 For current policies or software catalogs, consult https://help.nscc.sg/ or current module and scheduler output, recording the verification date. When explaining only the supplied PDFs, cite the relevant file and page.

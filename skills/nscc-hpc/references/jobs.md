@@ -18,7 +18,7 @@ module avail
 
 Inspect project storage with `myquota -p PROJECT_ID`. Query historical usage with `myprojects -p PROJECT_ID -l -s YYYY-MM-DD -e YYYY-MM-DD`. Personal projects generally follow `personal-<userid>`; still use the project selected by the user.
 
-Metadata scans over large trees (`find`, `du`, integrity checks across millions of files) are login-node load that administrators actively watch for; run them in a short CPU job with `xargs -P` on the allocated cores. Template and context: [scan.pbs](../assets/scan.pbs), [transfers.md](transfers.md). Historical notes described long CPU jobs routing from `normal` to `qlong`. Verify current routing, walltime and concurrency limits; do not submit directly to route-only execution queues.
+Metadata scans over large trees (`find`, `du`, integrity checks across millions of files) are login-node load that administrators actively watch for; run them in a short CPU job with `xargs -P` on the allocated cores. Template and context: [scan.pbs](../assets/scan.pbs), [transfers.md](transfers.md). Long CPU jobs routed from `normal` to `qlong` when walltime exceeded 24 h (observed 2026-10: maximum 120 h, no GPUs, 5 running jobs per user). Verify current routing, walltime and concurrency limits; do not submit directly to route-only execution queues. Dated queue limits, node inventory and sizing: [capacity.md](capacity.md).
 
 ## Storage and software
 

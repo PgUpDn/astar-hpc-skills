@@ -4,8 +4,8 @@ Reusable agent skills for A*STAR researchers working with ACRC Orion and NSCC AS
 
 | Skill | System | Capabilities |
 |---|---|---|
-| [acrc-hpc](skills/acrc-hpc/SKILL.md) | ACRC Orion · Slurm | Account and partition discovery, CPU/GPU jobs, storage, containers, transfers and institutional LLM gateways |
-| [nscc-hpc](skills/nscc-hpc/SKILL.md) | NSCC ASPIRE2A · PBS Professional | Connection setup, projects and quotas, CPU/GPU/array jobs, bulk transfers, portals and inference services |
+| [acrc-hpc](skills/acrc-hpc/SKILL.md) | ACRC Orion and HPC · Slurm | Account and partition discovery on both ACRC systems, SSH key diagnosis, CPU/GPU jobs, storage, containers, cron, transfers and institutional LLM gateways |
+| [nscc-hpc](skills/nscc-hpc/SKILL.md) | NSCC ASPIRE2A · PBS Professional | Connection setup and relayed access, projects and charging, queue limits and resource-based routing, CPU/GPU/array jobs, bulk transfers, headless FreeCAD/gmsh, crash solvers, portals and inference services |
 
 ## Install
 
@@ -42,6 +42,8 @@ Adapted from operational skill notes and dated NSCC training-guide summaries. Pe
 Cluster settings change. Historical examples are not promises of current access, capacity, charging rates or installed versions. Check the active scheduler and current institutional guidance.
 
 The source skills were retrieved from the two clusters on 2026-10-06. The NSCC remote copy matched the local reference copy byte for byte.
+
+Updated 2026-11-20 with dated operational observations: NSCC queue limits, resource-based routing and default charging (2026-10-10), relayed access and engineering workflows (October-November 2026), the separate older ACRC HPC cluster and SSH key diagnosis (2026-11-20), and ACRC cron and Apptainer defaults (November 2026). Account identifiers, balances, private paths and addresses remain excluded.
 
 Validation covers skill metadata, local links, shell syntax, helper behavior and publication hygiene. It does not establish live scheduler acceptance or workload correctness; no real compute jobs are submitted for validation.
 

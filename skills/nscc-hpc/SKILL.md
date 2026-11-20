@@ -16,6 +16,8 @@ Use the source-guide summaries and current cluster output to complete the user's
 | Arrays, dependencies, multiple nodes, and troubleshooting | [advanced.md](references/advanced.md) |
 | Job Portal, Jupyter, remote desktops, and browser uploads | [portal.md](references/portal.md) |
 | Bulk multi-TB transfers, long-lived SSH sessions, and scan jobs | [transfers.md](references/transfers.md) |
+| Node inventory, queue limits, resource-based routing, charging, and sizing | [capacity.md](references/capacity.md) |
+| Relayed access, headless FreeCAD/gmsh, crash solvers, and agent policy | [engineering.md](references/engineering.md) |
 | inf-pod LLM endpoint and Claude Code on the cluster | [llm-infopod.md](references/llm-infopod.md) |
 | Original PDFs, versions, page references, and conflicting guidance | [sources.md](references/sources.md) |
 
@@ -30,13 +32,16 @@ Reuse the account, project, resource requirements, and authorization already est
 - File-tree scans (`find`, `du`) over large directories are login-node load: administrators watch for them and complain. Run scans in a short CPU job such as [scan.pbs](assets/scan.pbs). See [transfers.md](references/transfers.md).
 - The source environment required password authentication. Confirm the current approved method; for repeated transfers, reuse an authenticated ControlMaster where supported - see [transfers.md](references/transfers.md).
 - Use the `normal` routing queue for ordinary submissions. Use `ai` when required and authorized for the project. A queue appearing in `qstat -Q` does not imply users may submit directly to it. Use reservation queues only under the applicable authorized site arrangements.
-- Specify the charging project with `#PBS -P`. Visibility of several projects does not authorize choosing any one arbitrarily. Login banner balances are not necessarily current.
+- Specify the charging project with `#PBS -P`. Visibility of several projects does not authorize choosing any one arbitrarily. Login banner balances are not necessarily current. A job without `-P` was charged to `personal-<user>` (observed 2026-10).
+- Queue placement follows the requested resources, not the written `-q`: a `-q q2` script with walltime of 2 h or less ran in `qdev` (observed 2026-10). Choose `ncpus`/`walltime` for the target queue and confirm with `qstat -x -f`. See [capacity.md](references/capacity.md).
+- Login and compute nodes are x86_64 (AMD EPYC); aarch64 binaries do not run.
+- Check site and project policy before running LLM agents or model API calls on the cluster; reachability is not permission. See [engineering.md](references/engineering.md).
 - Scratch and AI-node `$TMPDIR` are temporary storage. Preserve important outputs in persistent directories. Scratch is subject to purge policies; job-local temporary storage is removed after the job.
 - Guide versions, resource ratios, queue limits, quotas, and SU charging rules are historical snapshots. Verify current modules, scheduler settings, and applicable announcements before execution. Identify unverified values as guidance from the supplied documents.
 
 ## Preparation, execution, and completion
 
-Templates: [CPU](assets/cpu.pbs), [GPU](assets/gpu.pbs), [array](assets/array.pbs), and [scan](assets/scan.pbs). Replace the project, resources, workload command, and environment setup. Check input/output paths, LF line endings, ASCII hyphens, and shell syntax. Do not submit unresolved placeholders. Passing static syntax checks does not establish scheduler acceptance or computational correctness.
+Templates: [CPU](assets/cpu.pbs), [GPU](assets/gpu.pbs), [array](assets/array.pbs), [scan](assets/scan.pbs), and [crash solver](assets/crash_openmp.pbs). Replace the project, resources, workload command, and environment setup. Check input/output paths, LF line endings, ASCII hyphens, and shell syntax. Do not submit unresolved placeholders. Passing static syntax checks does not establish scheduler acceptance or computational correctness.
 
 Requests to draft scripts or provide advice authorize preparation; requests to submit or run authorize the corresponding job execution. Respect existing authorization without asking again. Unrequested cancellation, bulk deletion, resource expansion, or resubmission is outside the default scope. Do not submit real jobs solely to test this skill.
 

@@ -1,0 +1,26 @@
+#!/bin/bash
+# Shared-memory explicit crash run (OpenRadioss-family solver) on one full node.
+# Replace every REPLACE_* value; 128 cores with walltime above 2 h routes to a full-node queue.
+# Cross-check each new deck version on a short run first; see references/engineering.md.
+#PBS -N crash-openmp
+#PBS -P REPLACE_PROJECT_ID
+#PBS -q normal
+#PBS -l select=1:ncpus=128:mem=400gb:mpiprocs=1:ompthreads=128
+#PBS -l walltime=12:00:00
+#PBS -j oe
+
+set -euo pipefail
+cd "${PBS_O_WORKDIR:?Missing submission directory}"
+D="REPLACE_SOLVER_DIR"
+DECK="REPLACE_DECK.k"
+[[ -x "$D/exec/starter_linux64_gf" && -x "$D/exec/engine_linux64_gf" ]] || { echo 'Solver executables not found' >&2; exit 2; }
+[[ -f "$DECK" ]] || { echo 'Input deck not found' >&2; exit 2; }
+export RAD_CFG_PATH="$D/hm_cfg_files" OPENRADIOSS_PATH="$D"
+export OMP_NUM_THREADS="${NCPUS:-128}" OMP_STACKSIZE=400m KMP_STACKSIZE=400m
+export LD_LIBRARY_PATH="$D/extlib/hm_reader/linux64:$D/extlib/h3d/lib/linux64:${LD_LIBRARY_PATH:-}"
+ulimit -s unlimited
+printf 'job=%s host=%s threads=%s\n' "${PBS_JOBID:-}" "$(hostname)" "$OMP_NUM_THREADS"
+"$D/exec/starter_linux64_gf" -i "$DECK" -np 1 > starter.console.log 2>&1
+"$D/exec/engine_linux64_gf" -i "${DECK%.*}_0001.rad" -nt "$OMP_NUM_THREADS" > engine.console.log 2>&1
+# Time-history conversion is a convenience; a failure here does not invalidate the run.
+"$D/exec/th_to_csv_linux64_gf" "${DECK%.*}T01" > th.console.log 2>&1 || echo 'th_to_csv failed; see th.console.log' >&2

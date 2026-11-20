@@ -1,9 +1,9 @@
 ---
 name: acrc-hpc
-description: Operate ACRC Orion for A*STAR researchers using Slurm, including account and partition checks, CPU/GPU jobs, storage, containers, transfers and institutional LLM gateway troubleshooting. Use for ACRC cluster tasks, not NSCC PBS jobs.
+description: Operate ACRC Slurm clusters (Orion and the older ACRC HPC cluster) for A*STAR researchers, including account and partition checks, CPU/GPU jobs, storage, containers, transfers and institutional LLM gateway troubleshooting. Use for ACRC cluster tasks, not NSCC PBS jobs.
 ---
 
-# ACRC Orion
+# ACRC Slurm clusters (Orion and HPC)
 
 Use the researcher's own connection, charging account and project paths. Respond in their preferred language. Historical observations in the references require current verification.
 
@@ -11,7 +11,7 @@ Use the researcher's own connection, charging account and project paths. Respond
 
 | Task | Reference |
 |---|---|
-| Login, account discovery, partitions, quotas and software | [cluster.md](references/cluster.md) |
+| Login, SSH key diagnosis, the two ACRC systems, account discovery, partitions, cron, quotas and software | [cluster.md](references/cluster.md) |
 | Slurm preparation, execution, arrays and failure diagnosis | [jobs.md](references/jobs.md) |
 | Node-local staging, containers and file transfers | [storage-and-containers.md](references/storage-and-containers.md) |
 | Institutional LLM endpoints, credentials and proxy diagnosis | [llm-gateway.md](references/llm-gateway.md) |
@@ -19,7 +19,8 @@ Use the researcher's own connection, charging account and project paths. Respond
 
 ## Operating constraints
 
-- ACRC Orion uses Slurm. Run substantive computation, builds, test suites, bulk transfers and large metadata scans in appropriate allocations; keep login-node activity light.
+- ACRC runs more than one Slurm system. Confirm which one you are on (`hostname`, `sinfo -s`): Orion and the older HPC cluster have separate login hosts, home directories, storage, SSH `authorized_keys`, partitions and Slurm versions. See [cluster.md](references/cluster.md).
+- Run substantive computation, builds, test suites, bulk transfers and large metadata scans in appropriate allocations; keep login-node activity light.
 - Select a charging account and partition authorized for this researcher. A partition being visible does not establish access. Set walltime explicitly.
 - Inspect project-directory quotas, not only whole-filesystem capacity. Preserve results outside job-local temporary storage before the allocation ends.
 - Query current modules, resource ratios and QoS limits. Do not convert another account's historical permissions into defaults.
